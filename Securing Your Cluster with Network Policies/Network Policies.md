@@ -17,6 +17,9 @@ Network policy is not supported for clusters whose nodes are f1-micro or g1-smal
 
 # Hands-On
 
+Please create a GKE cluster and enable Network policy when you create it.
+![Enable GKE Network Policy](https://github.com/CloudMile-Inc/K8S-Playbook/blob/master/image/network_policy.png)
+
 1. Create a network policy namespace “np-ns”
 ```
 $ kubectl create namespace np-ns
@@ -24,9 +27,9 @@ $ kubectl create namespace np-ns
 
 2. Create a nginx pod “nginx-network-policy-test”, and create a pod “nginx-can-access” that allow access nginx pod and a pod “nginx-cannot-access” that don't allow access nginx pod
 ```
-$ vim nginx-network-policy-test
-$ vim nginx-can-access
-$ vim nginx-cannot-access
+$ vim nginx-network-policy-test.yaml
+$ vim nginx-can-access.yaml
+$ vim nginx-cannot-access.yaml
 ```
 
 3. Deploy those pods
@@ -90,6 +93,9 @@ $ kubectl describe ns/np-ns
 ```
 
 5. Before applying the network policy, both pods can access the nginx pod normally
+
+>**Note**: Please replace "nginx-network-policy-test-ip" and "nginx-network-policy-test-ip" with your pod'ip that generated from the "$ kubectl get pod -o wide -n np-ns" command
+
 ```
 $ kubectl -n np-ns exec nginx-can-access -- /bin/sh -c "ping -c 2 nginx-network-policy-test-ip"
 $ kubectl -n np-ns exec nginx-cannot-access -- /bin/sh -c "ping -c 2 nginx-network-policy-test-ip"
@@ -127,6 +133,9 @@ $ kubectl get netpol -n np-ns
 ```
 
 8. After applying the network policy, only nginx-can-access allow access nginx pod
+
+>**Note**: Please replace "nginx-network-policy-test-ip" and "nginx-network-policy-test-ip" with your pod'ip that generated from the "$ kubectl get pod -o wide -n np-ns" command
+
 ```
 $ kubectl -n np-ns exec nginx-can-access -- /bin/sh -c "ping -c 2 nginx-network-policy-test-ip"
 $ kubectl -n np-ns exec nginx-cannot-access -- /bin/sh -c "ping -c 2 nginx-network-policy-test-ip"
@@ -146,3 +155,5 @@ $ kubectl -n np-ns delete netpol deny-nginx-access
 - https://cloud.google.com/kubernetes-engine/docs/how-to/network-policy
 - https://cloud.google.com/kubernetes-engine/docs/tutorials/network-policy
   
+
+
