@@ -57,7 +57,7 @@ $ helm version
 2. Setup the official ingress-nginx repository.
 ```
 $ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-$ helm3 repo update
+$ helm repo update
 ```
 
 3. Setup the Nginx Ingress Controller in nginx namespace.
