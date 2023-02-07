@@ -51,35 +51,36 @@ source <(helm completion bash)
 
 Check the version with “helm version”:
 ```
-$ helm version
+helm version
 ```
 
-2. Setup the official ingress-nginx repository.
+2. Setup the official ingress-nginx repository
 ```
-$ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-$ helm3 repo update
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
 ```
+
 
 3. Setup the Nginx Ingress Controller in nginx namespace.
 ```
-$ kubectl create ns nginx
+kubectl create ns nginx
 ```
 
 4. Execute the Nginx’s chart.
 ```
-$ helm install nginx ingress-nginx/ingress-nginx --namespace nginx --set rbac.create=true --set controller.publishService.enabled=true
+helm install nginx ingress-nginx/ingress-nginx --namespace nginx --set rbac.create=true --set controller.publishService.enabled=true
 ```
 
 5. Check the external IP of our Nginx Ingress controller:
 ```
-$ kubectl get svc -n nginx
+kubectl get svc -n nginx
 ```
 
 6. Create a hello-app deployment and expose it:
 ```
-$ kubectl create deployment hello-app --image=gcr.io/google-samples/hello-app:1.0
+kubectl create deployment hello-app --image=gcr.io/google-samples/hello-app:1.0
 
-$ kubectl expose deployment hello-app --port 8080 --target-port 8080
+kubectl expose deployment hello-app --port 8080 --target-port 8080
 ```
 
 7. Deploy the ingress controller:
@@ -106,7 +107,7 @@ spec:
 ```
 Delpoy apply -f hello-app-ingress.yaml.
 ```
-$ kubectl apply -f hello-app-ingress.yaml
+kubectl apply -f hello-app-ingress.yaml
 ```
 8. Now, we can visit the url below. 
 ```
@@ -114,15 +115,15 @@ http://external-ip/helloworld
 ```
 You can get the external ip from below command.
 ```
-$ kubectl get svc -n nginx
+kubectl get svc -n nginx
 ```
 8. Clean up. 
 ```
-$ kubectl delete deploy hello-app
+kubectl delete deploy hello-app
 ```
 You can get the external ip from below command.
 ```
-$ helm uninstall nginx --namespace nginx
+helm uninstall nginx --namespace nginx
 ```
 
 

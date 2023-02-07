@@ -19,10 +19,11 @@ As an alternative to writing a Service manifest, you can create a Service by usi
 
 1. Create and deply a nginx deployment.
 ```
-$ vim my-nginx.yaml
-$ kubectl create ns my-nginx
-$ kubectl -n my-nginx apply -f my-nginx.yaml
+vim my-nginx.yaml
+kubectl create ns my-nginx
+kubectl -n my-nginx apply -f my-nginx.yaml
 ```
+### my-nginx.yaml
 ```
 apiVersion: apps/v1
 kind: Deployment
@@ -48,16 +49,16 @@ spec:
 2. Check your nginx deployment is up and running.
 You can observe that nginx replica has two different IP addresses.
 ```
-$ kubectl -n my-nginx get pods -o wide
+kubectl -n my-nginx get pods -o wide
 ```
 
 3. create a Service for your nginx replicas with kubectl expose.
 
 A Kubernetes Service is an abstraction which defines a logical set of Pods running somewhere in your cluster, that all provide the same functionality. When created, each Service is assigned a unique IP address called clusterIP. This address is tied to the lifespan of the Service, and will not change while the Service is alive. Pods can be configured to talk to the Service, and know that communication to the Service will be automatically load-balanced out to some pod that is a member of the Service.
 ```
-$ kubectl -n my-nginx expose deployment/my-nginx
-$ kubectl -n my-nginx get svc my-nginx
-$ kubectl -n my-nginx describe svc my-nginx
+kubectl -n my-nginx expose deployment/my-nginx
+kubectl -n my-nginx get svc my-nginx
+kubectl -n my-nginx describe svc my-nginx
 ```
 
 As mentioned previously, a Service is backed by a group of Pods. These Pods are exposed through endpoints. The Service’s selector will be evaluated continuously and the results will be POSTed to an Endpoints object also named my-nginx. When a Pod dies, it is automatically removed from the endpoints, and new Pods matching the Service’s selector will automatically get added to the endpoints.
@@ -65,13 +66,19 @@ As mentioned previously, a Service is backed by a group of Pods. These Pods are 
 4. Currently the Service does not have an External IP, so let’s now patch the Service to use a cloud load balancer, by updating the type of the my-nginx Service from ClusterIP to LoadBalancer:
 
 ```
-$ kubectl -n my-nginx patch svc my-nginx -p '{"spec": {"type": "LoadBalancer"}}'
-$ kubectl -n my-nginx get svc my-nginx
+kubectl -n my-nginx patch svc my-nginx -p '{"spec": {"type": "LoadBalancer"}}'
+kubectl -n my-nginx get svc my-nginx
 ```
 
 5. Use kubectl describe service my-nginx to see LoadBalancer Ingress.
 ```
-$ kubectl -n my-nginx describe service my-nginx | grep Ingress
+kubectl -n my-nginx describe service my-nginx | grep Ingress
+```
+6. Clean up.
+```
+kubectl -n my-nginx delete svc my-nginx
+kubectl -n my-nginx delete deploy my-nginx
+kubectl delete ns my-nginx
 ```
 
 ## Source
