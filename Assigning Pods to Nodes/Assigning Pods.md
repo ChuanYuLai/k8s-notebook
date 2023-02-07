@@ -16,20 +16,20 @@ Node affinity is conceptually similar to nodeSelector, allowing you to constrain
 ## Hands-on Node Selector
 1. Check the lable of your nodes.
 ```
-$ kubectl get nodes --show-labels -o wide
+kubectl get nodes --show-labels -o wide
 ```
-2. Label one of the nodes with disk_type=ssd.
+2. Label one of the nodes with disk_type=ssd. Please replace "node_name" with your node's name.
 ```
 kubectl label node/node_name disk_type=ssd
 ```
 3. Check if the label is valid.
 ```
-$ kubectl get nodes --show-labels -o wide
+kubectl get nodes --show-labels -o wide
 ```
 4. Deploy an nginx pod, specifying nodeSelector equal to disk_type=ssd.
 ```
-$ vim nodeselector.yaml
-$ kubectl apply -f nodeselector.yaml
+vim nodeselector.yaml
+kubectl apply -f nodeselector.yaml
 ```
 ### nodeselector.yaml
 ```
@@ -50,14 +50,14 @@ spec:
 
 5. Check which node the nginx pod is assigned to
 ```
-$ kubectl get pod -o wide
+kubectl get pod -o wide
 ```
 
 ## Hands-on Node Affinity
 1. Create a redis deployment and a nginx web server deployment, each deployment have three pods.
 ```
-$ vim redis.yaml
-$ vim webserver.yaml
+vim redis.yaml
+vim webserver.yaml
 ```
 ### redis.yaml
 ```
@@ -131,17 +131,23 @@ spec:
 
 2. Deply and check those deployment
 ```
-$ kubectl apply -f redis.yaml
-$ kubectl apply -f webserver.yaml
-$ kubectl get deployment
+kubectl apply -f redis.yaml
+kubectl apply -f webserver.yaml
+kubectl get deploy
 ```
 
 3. You can see that the k8s system has assigned the web app and redis to different worker nodes in a one-to-one pair.
 ```
-$ kubectl get pod -o wide
+kubectl get pod -o wide
 ```
 As you can see from the example above, if you don't want the pods to be assigned to the same node, just set podAntiAffinity and topologyKey: "kubernetes.io/hostname"
 
+4. Clean Up
+```
+kubectl delete pod nginx
+kubectl delete deploy redis-cache
+kubectl delete deploy web-server
+```
 
 
 ## Source
